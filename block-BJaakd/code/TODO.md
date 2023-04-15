@@ -2,38 +2,66 @@
 
 ```js
 // Your code
+let result = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("Promise Resolved!");
+  }, 1000);
+}).then((response) => console.log(response));
 ```
 
 2. Create another promise. Now have it reject with a value of `Rejected Promise!` without using `setTimeout`. Print the contents of the promise after it has been rejected by passing console.log to `.catch`
 
 ```js
 // Your code
+let result = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject("Rejected Promise!");
+  }, 1000);
+}).catch((error) => console.log(error));
 ```
 
 3. Create another promise. Now have it reject with a value of `Rejected Promise!` without using `setTimeout`. Print the contents of the promise after it has been rejected by passing console.log to `.catch` and also use `.finally` to log message `Promise Settled!`.
 
 ```js
 // Your code
+let result = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject("Rejected Promise!");
+  }, 1000);
+})
+  .catch((error) => console.log(error))
+  .finally(() => console.log(`Promise Settled!`));
 ```
 
 4. What will be the output of the code below.
 
 ```js
-console.log('A');
+console.log("A");
 
 // Asynchronous code finises in 0 seconds (Callback Queue)
-setTimeout(() => console.log('B'), 0); // callback queue
+setTimeout(() => console.log("B"), 0); // callback queue
 
 // A promise that resolves right away (Microtask Queue)
-Promise.resolve().then(() => console.log('C'));
+Promise.resolve().then(() => console.log("C"));
 
-console.log('D');
+console.log("D");
 ```
+
+output --
+A
+D
+C
+B
 
 5. Write a function named `wait` that accepts `time` in ms returns a promise. The promise gets resolved after given time.
 
 ```js
 // Your code
+function wait(time) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve("Promise resoved"), time);
+  });
+}
 ```
 
 6. Do the following:
@@ -47,6 +75,16 @@ console.log('D');
 
 ```js
 // Your code
+let result = new Promise((resolve, reject) => {
+  resolve(21);
+})
+  .then((res) => res + 10)
+  .then((res) => res + 100)
+  .then((res) => {
+    console.log(res > 100);
+    throw new Error("something went wrong");
+  })
+  .catch((error) => console.log(error));
 ```
 
 7. Do the following:
@@ -59,6 +97,20 @@ console.log('D');
 
 ```js
 // Your code
+let result = new Promise((resolve, reject) => {
+  resolve(["A"]);
+})
+  .then((res) => {
+    res.push("B");
+    return res;
+  })
+  .then((res) => {
+    return res.reduce((obj, item, index) => {
+      obj[index] = item;
+      return obj;
+    }, {});
+  })
+  .then((res) => console.log(res));
 ```
 
 8. Do the following:
@@ -70,6 +122,23 @@ console.log('D');
 
 ```js
 // Your code
+let first = new Promise((resolve, reject) => {
+  resolve(1);
+});
+
+first
+  .then((res) => {
+    console.log(res);
+    return 2;
+  })
+  .then((res) => {
+    console.log(res);
+    return 3;
+  })
+  .then((res) => {
+    console.log(res);
+    return 4;
+  });
 ```
 
 9. Do the following:
@@ -81,9 +150,29 @@ console.log('D');
 
 ```js
 // Your code
+let first = new Promise((resolve, reject) => {
+  resolve(1);
+});
+
+first.then((res) => {
+  console.log(res);
+  return 2;
+});
+
+first.then((res) => {
+  console.log(res);
+  return 3;
+});
+
+first.then((res) => {
+  console.log(res);
+  return 4;
+});
 ```
 
 10. Try to understand the difference between the problem 8 and 9. Write your observation.
+
+When chaining, the returned value from previous "then" method is passed onto the next "then" method hence consoling log the returned value. Whereas when "then" is called on the object itself each item the console logged value remains 1 which it was initially resolved with.
 
 11. Do the following
 
@@ -94,4 +183,16 @@ console.log('D');
 
 ```js
 // Your code
+let result = new Promise((resolve, reject) => {
+  resolve("John");
+})
+  .then((res) => new Promise((resolve, reject) => resolve("Arya")))
+  .then((res) => {
+    console.log(res);
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve("Bran"), 2000);
+    });
+  })
+  .then((res) => console.log(res));
 ```
