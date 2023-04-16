@@ -1,6 +1,12 @@
 const newsContainer = document.querySelector(".news-container");
 const newsCategories = document.querySelector(".news-categories");
 
+function handleSpinner(status) {
+  if (status) {
+    newsContainer.innerHTML = `<div class="donut"></div>`;
+  }
+}
+
 function displayNews(item) {
   let newsCard = document.createElement("div");
   newsCard.classList.add("news-card");
@@ -43,7 +49,8 @@ function getCategory(event) {
 }
 
 function fetchData(callback) {
-  let news = fetch("https://api.spaceflightnewsapi.net/v3/articles?_limit=30")
+  handleSpinner(true);
+  fetch("https://api.spaceflightnewsapi.net/v3/articles?_limit=30")
     .then((response) => {
       if (!response.ok) {
         throw new Error("Something went wrong! Please try sometime later");
@@ -54,6 +61,7 @@ function fetchData(callback) {
       if (!navigator.onLine) {
         throw new Error("Device is not connected to Internet");
       }
+      handleSpinner(false);
       newsContainer.innerHTML = "";
       res.forEach((item) => {
         callback(item);
